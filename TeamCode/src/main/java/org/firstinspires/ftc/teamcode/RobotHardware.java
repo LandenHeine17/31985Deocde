@@ -5,11 +5,13 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
 public class RobotHardware {
     DcMotor leftMotor, rightMotor;
     DcMotorEx flywheelMotor;
     Servo leftServo, rightServo, angleServo;
+    UltrasonicSensor rangeSensor;
 
     public void init(HardwareMap HwMap) {
         // MOTORS
@@ -22,6 +24,9 @@ public class RobotHardware {
         rightServo = HwMap.get(Servo.class, "rightServo");
         angleServo = HwMap.get(Servo.class, "centerServo");
 
+        // SENSOR
+        // input 5, output 4
+        rangeSensor = HwMap.get(UltrasonicSensor.class, "ultrasonic");
 
         // DRIVE TRAIN MOTORS
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
