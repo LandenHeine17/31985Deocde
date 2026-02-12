@@ -11,7 +11,6 @@ public class RobotHardware {
     DcMotor leftMotor, rightMotor;
     DcMotorEx flywheelMotor;
     Servo leftServo, rightServo, angleServo;
-    UltrasonicSensor rangeSensor;
 
     public void init(HardwareMap HwMap) {
         // MOTORS
@@ -19,14 +18,11 @@ public class RobotHardware {
         rightMotor = HwMap.get(DcMotor.class, "rightMotor");
         flywheelMotor = HwMap.get(DcMotorEx.class, "flywheelMotor");
 
+        flywheelMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // SERVOS
         leftServo = HwMap.get(Servo.class, "leftServo");
         rightServo = HwMap.get(Servo.class, "rightServo");
         angleServo = HwMap.get(Servo.class, "centerServo");
-
-        // SENSOR
-        // input 5, output 4
-        rangeSensor = HwMap.get(UltrasonicSensor.class, "ultrasonic");
 
         // DRIVE TRAIN MOTORS
         rightMotor.setDirection(DcMotor.Direction.REVERSE);

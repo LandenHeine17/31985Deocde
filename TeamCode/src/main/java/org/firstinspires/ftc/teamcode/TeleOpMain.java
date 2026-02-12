@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class TeleOpMain extends OpMode {
     RobotHardware rob = new RobotHardware();
     double power;
+    double flywheelSpeed;
     double leftMotorPower, rightMotorPower;
     double turn;
     double anglePos = 0.5;   // starting position — adjust if needed
@@ -60,14 +61,8 @@ public class TeleOpMain extends OpMode {
             rob.leftMotor.setPower(leftMotorPower);
         }
 
-
-
         // Controls flywheels
-        if (gamepad1.right_bumper) {
-            rob.flywheelMotor.setPower(1);
-        } else {
-            rob.flywheelMotor.setPower(0);
-        }
+        handleFlywheel();
 
         // Controls Servos
         if (gamepad1.left_bumper) {
@@ -80,7 +75,14 @@ public class TeleOpMain extends OpMode {
         telemetry.addData("Flywheel ticks/sec", rob.flywheelMotor.getVelocity());
         telemetry.addData("Flywheel power", rob.flywheelMotor.getPower());
         telemetry.update();
+    }
 
-
+    void handleFlywheel() {
+        if (gamepad2.dpadUpWasPressed()) {
+            flywheelSpeed += 0.2;
+        } else if (gamepad2.dpadDownWasPressed()) {
+            flywheelSpeed -= 0.2;
+        }
+        rob.flywheelMotor.setPower(flywheelSpeed);
     }
 }
