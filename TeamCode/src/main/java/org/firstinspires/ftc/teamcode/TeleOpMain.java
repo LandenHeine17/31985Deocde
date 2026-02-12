@@ -12,6 +12,9 @@ public class TeleOpMain extends OpMode {
     double power;
     double flywheelSpeed;
     double leftMotorPower, rightMotorPower;
+
+    double turnCoeff;
+    int drivingMode = 0;
     double turn;
     double anglePos = 0.5;   // starting position — adjust if needed
 
@@ -43,23 +46,7 @@ public class TeleOpMain extends OpMode {
     @Override
     public void loop() {
         handleAngleServo();
-        power = -gamepad1.right_stick_y;
-        turn = gamepad1.left_stick_x;
-        // Controls drivetrain
-        if (turn>=0) {
-            leftMotorPower = power*((1-turn)/2+.5);
-            rightMotorPower = power;
-
-            rob.rightMotor.setPower(rightMotorPower);
-            rob.leftMotor.setPower(leftMotorPower);
-        } else if (turn<0) {
-            leftMotorPower = power;
-
-            rightMotorPower = power*((1+turn)/2+.5);
-
-            rob.rightMotor.setPower(rightMotorPower);
-            rob.leftMotor.setPower(leftMotorPower);
-        }
+        handleDrivetrain();
 
         // Controls flywheels
         handleFlywheel();
@@ -72,16 +59,51 @@ public class TeleOpMain extends OpMode {
             rob.leftServo.setPosition(0);
             rob.rightServo.setPosition(1);
         }
+        telemetry.addData("Drivemode", drivingMode);
         telemetry.addData("Flywheel ticks/sec", rob.flywheelMotor.getVelocity());
         telemetry.addData("Flywheel power", rob.flywheelMotor.getPower());
         telemetry.update();
     }
 
+
+    void handleDrivetrain() {
+        if (drivingMode == 1) { // single stick
+            power = -gamepad1.right_stick_y * 0.6;
+            turn = -gamepad1.left_stick_x;
+            turnCoeff = 1;
+            // Controls drivetrain
+            if (turn>=0) {
+                leftMotorPower = power*((1-turn)*turnCoeff+(1-turnCoeff));
+                rightMotorPower = power;
+
+                rob.rightMotor.setPower(rightMotorPower);
+                rob.leftMotor.setPower(leftMotorPower);
+            } else if (turn<0) {
+                leftMotorPower = power;
+
+                rightMotorPower = power*((1+turn)*turnCoeff+(1-turnCoeff));
+
+                rob.rightMotor.setPower(rightMotorPower);
+                rob.leftMotor.setPower(leftMotorPower);
+            }
+
+            if (gamepad1.aWasPressed()) {
+                drivingMode = 0;
+            }
+        } else if (drivingMode == 0) {
+            rob.rightMotor.setPower(-gamepad1.right_stick_y * 0.5);
+            rob.leftMotor.setPower(-gamepad1.left_stick_y * 0.5);
+            if (gamepad1.aWasPressed()) {
+                drivingMode = 1;
+            }
+        }
+    }
+
     void handleFlywheel() {
-        if (gamepad2.dpadUpWasPressed()) {
-            flywheelSpeed += 0.2;
-        } else if (gamepad2.dpadDownWasPressed()) {
-            flywheelSpeed -= 0.2;
+        if (gamepad1.dpadUpWasPressed()) {
+            flywheelSpeed += 0.02;
+        } else if (gamepad1.dpadDownWasPressed()) {
+            flywheelSpeed -= 0.02;
         }
         rob.flywheelMotor.setPower(flywheelSpeed);
     }

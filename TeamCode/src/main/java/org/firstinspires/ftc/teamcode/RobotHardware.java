@@ -25,6 +25,6 @@ public class RobotHardware {
         angleServo = HwMap.get(Servo.class, "centerServo");
 
         // DRIVE TRAIN MOTORS
-        rightMotor.setDirection(DcMotor.Direction.REVERSE);
+        leftMotor.setDirection(DcMotor.Direction.REVERSE);
     }
 }
