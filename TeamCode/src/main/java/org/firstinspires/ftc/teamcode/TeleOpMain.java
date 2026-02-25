@@ -13,6 +13,9 @@ public class TeleOpMain extends OpMode {
     double flywheelSpeed;
     double leftMotorPower, rightMotorPower;
 
+    double angle;
+
+    double magnitute;
     double turnCoeff;
     int drivingMode = 0;
     double turn;
@@ -96,6 +99,40 @@ public class TeleOpMain extends OpMode {
             if (gamepad1.aWasPressed()) {
                 drivingMode = 1;
             }
+        }
+    }
+    void strafeNoTurn() {
+        if (gamepad1.right_stick_y>0) {
+            angle=Math.atan(gamepad1.right_stick_y/gamepad1.right_stick_x);
+        }
+        else {
+            angle=Math.PI+Math.atan(gamepad1.right_stick_y/gamepad1.right_stick_x);
+        }
+        magnitute=Math.pow((Math.pow((gamepad1.right_stick_y),2)+Math.pow((gamepad1.right_stick_x),2)),.5);
+
+        if (angle>0 && Math.PI/2>=angle) {
+            rob.rightRear.setPower(magnitute);
+            rob.rightFront.setPower(magnitute*((angle-(Math.PI/4))/(Math.PI/4)));
+            rob.leftRear.setPower(magnitute*((angle-(Math.PI/4))/(Math.PI/4)));
+            rob.leftFront.setPower(magnitute);
+        }
+        if (angle>Math.PI/2 && Math.PI>=angle) {
+            rob.rightRear.setPower(magnitute*((angle-(Math.PI/4+Math.PI/2))/(Math.PI/4)));
+            rob.rightFront.setPower(magnitute);
+            rob.leftRear.setPower(magnitute);
+            rob.leftFront.setPower(magnitute*((angle-(Math.PI/4+Math.PI/2))/(Math.PI/4)));
+        }
+        if (angle>Math.PI && 3*Math.PI/2>=angle) {
+            rob.rightRear.setPower(-magnitute*((angle-(Math.PI/4+2*Math.PI/2))/(Math.PI/4)));
+            rob.rightFront.setPower(-magnitute);
+            rob.leftRear.setPower(-magnitute);
+            rob.leftFront.setPower(-magnitute*((angle-(Math.PI/4+2*Math.PI/2))/(Math.PI/4)));
+        }
+        if (angle>3*Math.PI/2 && Math.PI*2>=angle) {
+            rob.rightRear.setPower(magnitute);
+            rob.rightFront.setPower(magnitute*((angle-(Math.PI/4+3*Math.PI/2))/(Math.PI/4)));
+            rob.leftRear.setPower(magnitute*((angle-(Math.PI/4+3*Math.PI/2))/(Math.PI/4)));
+            rob.leftFront.setPower(magnitute);
         }
     }
 
