@@ -6,9 +6,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class RobotHardware {
-    DcMotor leftMotor, rightMotor;
     DcMotorEx flywheelMotor;
-    Servo leftServo, rightServo, angleServo;
+    Servo leftServo, rightServo;
     // Movement motors
     DcMotor rightFront, rightRear, leftFront, leftRear;
     // intake and flywheel
@@ -18,9 +17,6 @@ public class RobotHardware {
 
     public void init(HardwareMap HwMap) {
         // MOTORS
-//        leftMotor = HwMap.get(DcMotor.class, "leftMotor");
-//        rightMotor = HwMap.get(DcMotor.class, "rightMotor");
-
         rightFront = HwMap.get(DcMotor.class, "rightFront");
         rightRear = HwMap.get(DcMotor.class, "rightBack");
         leftFront = HwMap.get(DcMotor.class, "leftFront");
@@ -34,7 +30,6 @@ public class RobotHardware {
         // SERVOS
         leftServo = HwMap.get(Servo.class, "leftPusher");
         rightServo = HwMap.get(Servo.class, "rightPusher");
-        angleServo = HwMap.get(Servo.class, "intakeServo");
 
 
     }

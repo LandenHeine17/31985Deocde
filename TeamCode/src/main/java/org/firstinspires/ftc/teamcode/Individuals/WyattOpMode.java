@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.Individuals;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+@Disabled
 @TeleOp
 public class WyattOpMode extends OpMode {
     @Override
