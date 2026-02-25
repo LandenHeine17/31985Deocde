@@ -10,8 +10,6 @@ public class RobotHardware {
     Servo leftServo, rightServo;
     // Movement motors
     DcMotor rightFront, rightRear, leftFront, leftRear;
-    // intake and flywheel
-    DcMotor intake;
 
 
 
@@ -22,11 +20,20 @@ public class RobotHardware {
         leftFront = HwMap.get(DcMotor.class, "leftFront");
         leftRear = HwMap.get(DcMotor.class, "leftBack");
 
-        intake = HwMap.get(DcMotor.class, "intake");
+        // Handle reverse motor directions
+        leftFront.setDirection(DcMotor.Direction.REVERSE);
+        leftRear.setDirection(DcMotor.Direction.REVERSE);
 
+        // Set zero power behaviors
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        // flywheel
         flywheelMotor = HwMap.get(DcMotorEx.class, "flywheel");
-
         flywheelMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         // SERVOS
         leftServo = HwMap.get(Servo.class, "leftPusher");
         rightServo = HwMap.get(Servo.class, "rightPusher");

@@ -15,9 +15,5 @@ public class AutoMain extends LinearOpMode {
         rob.init(hardwareMap);
         waitForStart();
         runTime.reset();
-        rob.leftMotor.setPower(1);
-        rob.rightMotor.setPower(1);
-
-
     }
 }

@@ -30,7 +30,7 @@ public class TeleOpMain extends OpMode {
 
         // Controls feeding servos
         handleServos();
-        
+
 
         telemetry.addData("Flywheel ticks/sec", rob.flywheelMotor.getVelocity());
         telemetry.addData("Flywheel power", rob.flywheelMotor.getPower());
