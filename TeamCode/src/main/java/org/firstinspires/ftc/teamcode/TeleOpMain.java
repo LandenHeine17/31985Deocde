@@ -10,8 +10,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class TeleOpMain extends OpMode {
     RobotHardware rob = new RobotHardware();
     double flywheelSpeed;
+    double drivetrainSpeed;
     double angle;
-
     double magnitude;
 
     // This runs once when the user presses init
@@ -32,6 +32,7 @@ public class TeleOpMain extends OpMode {
         handleServos();
 
 
+        telemetry.addData("Drivetrain speed", drivetrainSpeed);
         telemetry.addData("Flywheel ticks/sec", rob.flywheelMotor.getVelocity());
         telemetry.addData("Flywheel power", rob.flywheelMotor.getPower());
         telemetry.update();
@@ -39,9 +40,18 @@ public class TeleOpMain extends OpMode {
 
 
     void handleDrivetrain() {
-        double forward = gamepad1.right_stick_y;
-        double sideways = gamepad1.right_stick_x;
-        double rotate = gamepad1.left_stick_x;
+        // Handles speed
+        if (gamepad1.squareWasPressed()) {
+            drivetrainSpeed += 0.02;
+        } else if (gamepad1.circleWasPressed()) {
+            drivetrainSpeed -= 0.02;
+        } else if (gamepad1.triangleWasPressed()) {
+            drivetrainSpeed = 0.8;
+        }
+
+        double forward = -gamepad1.right_stick_y * drivetrainSpeed;
+        double sideways = gamepad1.right_stick_x * drivetrainSpeed;
+        double rotate = gamepad1.left_stick_x * drivetrainSpeed;
 
         rob.leftFront.setPower(forward + sideways + rotate);
         rob.leftRear.setPower(forward - sideways + rotate);
@@ -88,17 +98,18 @@ public class TeleOpMain extends OpMode {
             flywheelSpeed += 0.02;
         } else if (gamepad1.dpadDownWasPressed()) {
             flywheelSpeed -= 0.02;
+        } else if (gamepad1.dpadRightWasPressed()) {
+            flywheelSpeed = 0.5;
+            rob.flywheelMotor.setPower(flywheelSpeed);
         }
-        rob.flywheelMotor.setPower(flywheelSpeed);
     }
-
     void handleServos() {
         if (gamepad1.left_bumper) {
-            rob.leftServo.setPosition(1);
-            rob.rightServo.setPosition(0);
-        } else {
             rob.leftServo.setPosition(0);
             rob.rightServo.setPosition(1);
+        } else {
+            rob.leftServo.setPosition(1);
+            rob.rightServo.setPosition(0);
         }
     }
 }
