@@ -10,17 +10,19 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class TeleOpMain extends OpMode {
     RobotHardware rob = new RobotHardware();
     double flywheelSpeed;
-    double drivetrainSpeed;
+    double drivetrainSpeed = 0.8;
     double angle;
     double magnitude;
+    double feedforward = 10;
 
     // This runs once when the user presses init
     @Override
     public void init() {
         rob.init(hardwareMap);
+        rob.flywheelMotor.setVelocityPIDFCoefficients(140, 0, 0.0001, feedforward);
     }
 
-    // This runs in a loop after the user presses play
+    // This runs in a loop after the user presses playy
     @Override
     public void loop() {
         handleDrivetrain();
@@ -31,6 +33,8 @@ public class TeleOpMain extends OpMode {
         // Controls feeding servos
         handleServos();
 
+        updatePIDF();
+
 
         telemetry.addData("Drivetrain speed", drivetrainSpeed);
         telemetry.addData("Flywheel ticks/sec", rob.flywheelMotor.getVelocity());
@@ -38,6 +42,14 @@ public class TeleOpMain extends OpMode {
         telemetry.update();
     }
 
+    void updatePIDF() {
+        if (gamepad2.dpadUpWasPressed()) {
+            feedforward *= 1.01;
+        } else if (gamepad2.dpadDownWasPressed()) {
+            feedforward *= 0.99;
+        }
+
+    }
 
     void handleDrivetrain() {
         // Handles speed
@@ -99,9 +111,9 @@ public class TeleOpMain extends OpMode {
         } else if (gamepad1.dpadDownWasPressed()) {
             flywheelSpeed -= 0.02;
         } else if (gamepad1.dpadRightWasPressed()) {
-            flywheelSpeed = 0.5;
-            rob.flywheelMotor.setPower(flywheelSpeed);
+            flywheelSpeed = 0.6;
         }
+        rob.flywheelMotor.setPower(flywheelSpeed);
     }
     void handleServos() {
         if (gamepad1.left_bumper) {
