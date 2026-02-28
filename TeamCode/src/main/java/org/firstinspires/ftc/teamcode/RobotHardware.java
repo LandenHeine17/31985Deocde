@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -10,6 +11,9 @@ public class RobotHardware {
     Servo leftServo, rightServo;
     // Movement motors
     DcMotor rightFront, rightRear, leftFront, leftRear;
+
+    //Camera
+    Limelight3A limelight;
 
 
 
@@ -43,6 +47,10 @@ public class RobotHardware {
         // SERVOS
         leftServo = HwMap.get(Servo.class, "leftPusher");
         rightServo = HwMap.get(Servo.class, "rightPusher");
+
+        //LIMELIGHT
+        limelight = HwMap.get(Limelight3A.class, "limelight");
+        limelight.pipelineSwitch(0);
 
 
     }

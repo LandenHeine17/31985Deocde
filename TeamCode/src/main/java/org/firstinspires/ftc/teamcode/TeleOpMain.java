@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 
+import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -14,6 +15,7 @@ public class TeleOpMain extends OpMode {
     double angle;
     double magnitude;
     double feedforward = 10;
+    double rotateScalar = 0.02;
 
     // This runs once when the user presses init
     @Override
@@ -22,11 +24,26 @@ public class TeleOpMain extends OpMode {
         rob.flywheelMotor.setVelocityPIDFCoefficients(140, 0, 0.0001, feedforward);
     }
 
+    @Override
+    public void start() {
+        rob.limelight.start();
+    }
+
     // This runs in a loop after the user presses playy
     @Override
     public void loop() {
+        LLResult result = rob.limelight.getLatestResult();
+        if (result.isValid()) {
+            double tx = result.getTx();
+            double ty = result.getTy();
+            double ta = result.getTa();
+            telemetry.addData("Target X", tx);
+            telemetry.addData("Target Y", ty);
+            telemetry.addData("Target A", ta);
+        }
+
         // handles drivetrain
-        handleDrivetrain();
+        handleDrivetrain(result);
 
         // Controls flywheels
         handleFlywheel();
@@ -61,7 +78,7 @@ public class TeleOpMain extends OpMode {
         }
     }
 
-    void handleDrivetrain() {
+    void handleDrivetrain(LLResult result) {
         // Handles speed
         if (gamepad1.squareWasPressed()) {
             drivetrainSpeed += 0.02;
@@ -74,6 +91,10 @@ public class TeleOpMain extends OpMode {
         double forward = -gamepad1.right_stick_y * drivetrainSpeed;
         double sideways = gamepad1.right_stick_x * drivetrainSpeed;
         double rotate = gamepad1.left_stick_x * drivetrainSpeed;
+
+        if (gamepad1.left_trigger_pressed) {
+            rotate += rotateScalar * result.getTx();
+        }
 
         rob.leftFront.setPower(forward + sideways + rotate);
         rob.leftRear.setPower(forward - sideways + rotate);
