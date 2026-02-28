@@ -34,12 +34,6 @@ public class RobotHardware {
         leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        // set modes
-        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
         // flywheel
         flywheelMotor = HwMap.get(DcMotorEx.class, "flywheel");
         flywheelMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

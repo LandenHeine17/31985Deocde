@@ -23,7 +23,20 @@ public class TestingTeleOp extends OpMode {
 
     @Override
     public void loop() {
+        // Change motor power
+        if (gamepad1.dpadDownWasPressed()) {
+            flywheelPower -= 0.05;
+        } else if (gamepad1.dpadUpWasPressed()) {
+            flywheelPower += 0.05;
+        }
 
+        // Controls flywheels
+        if (gamepad1.right_bumper) {
+            rob.flywheelMotor.setPower(flywheelPower);
+        } else {
+            rob.flywheelMotor.setPower(0);
+        }
+        drivetrain();
     }
 
     public void drivetrain() {
