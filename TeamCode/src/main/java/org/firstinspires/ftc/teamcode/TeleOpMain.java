@@ -95,10 +95,10 @@ public class TeleOpMain extends OpMode {
     void handleServos() {
         if (gamepad1.left_bumper) {
             rob.leftServo.setPosition(1);
-            rob.rightServo.setPosition(0);
+            rob.rightServo.setPosition(1);
         } else {
             rob.leftServo.setPosition(0);
-            rob.rightServo.setPosition(1);
+            rob.rightServo.setPosition(0);
         }
     }
 }
