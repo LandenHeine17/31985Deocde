@@ -16,6 +16,7 @@ public class TeleOpMain extends OpMode {
     double magnitude;
     double feedforward = 10;
     double rotateScalar = 0.02;
+    String teamColor = "Blue";
 
     // This runs once when the user presses init
     @Override
@@ -29,7 +30,7 @@ public class TeleOpMain extends OpMode {
         rob.limelight.start();
     }
 
-    // This runs in a loop after the user presses playy
+    // This runs in a loop after the user presses play
     @Override
     public void loop() {
         LLResult result = rob.limelight.getLatestResult();
@@ -37,9 +38,6 @@ public class TeleOpMain extends OpMode {
             double tx = result.getTx();
             double ty = result.getTy();
             double ta = result.getTa();
-            telemetry.addData("Target X", tx);
-            telemetry.addData("Target Y", ty);
-            telemetry.addData("Target A", ta);
         }
 
         // handles drivetrain
@@ -51,12 +49,28 @@ public class TeleOpMain extends OpMode {
         // Controls feeding servos
         handleServos();
 
+        // controls limelight pipeline
+        handleColorSwitching();
+
         // extra telemetry
+        telemetry.addData("Detecting Tag", result.isValid());
+        telemetry.addData("Current Pipeline", teamColor);
         telemetry.addData("Drivetrain speed", drivetrainSpeed);
         telemetry.addData("Flywheel ticks/sec", rob.flywheelMotor.getVelocity());
         telemetry.addData("Flywheel power", rob.flywheelMotor.getPower());
         telemetry.update();
     }
+
+    void handleColorSwitching() {
+        if (gamepad1.leftStickButtonWasPressed()) {
+            teamColor = "Red";
+            rob.limelight.pipelineSwitch(0);
+        } else if (gamepad1.rightStickButtonWasPressed()) {
+            teamColor = "Blue";
+            rob.limelight.pipelineSwitch(1);
+        }
+    }
+
 
     void handleFlywheel() {
         if (gamepad1.dpadUpWasPressed()) {
@@ -86,6 +100,8 @@ public class TeleOpMain extends OpMode {
             drivetrainSpeed -= 0.02;
         } else if (gamepad1.triangleWasPressed()) {
             drivetrainSpeed = 0.8;
+        } else if (gamepad1.crossWasPressed()) {
+            drivetrainSpeed = 0.25;
         }
 
         double forward = -gamepad1.right_stick_y * drivetrainSpeed;
